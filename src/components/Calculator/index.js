@@ -3,36 +3,37 @@ import { Container, Screen, Previous, Current, Button } from './Styled';
 
 export default function Calculator() {
     const [previous, setPrevious] = useState('');
-    const [current, setCurrent] = useState('');
+    const [current, setCurrent] = useState('0');
     const [operation, setOperation] = useState('');
 
     const appendValue = (el) => {
         const value = el.target.getAttribute('data');
         if (value === '.' && current.includes('.')) return;
-        setCurrent(current + value);
+        if (current.length === 1 && current === '0') setCurrent(value);
+        else setCurrent(current + value)
         //console.log(value);
     }
 
     const handleDelete = () => {
-        setCurrent(String(current).slice(0, -1));
+        if (current.length === 1) setCurrent('0');
+        else setCurrent(String(current).slice(0, -1));
     }
 
     const handleClear = () => {
-        setCurrent('');
+        setCurrent('0');
         setPrevious('');
         setOperation('');
     }
 
     const chooseOperation = (el) => {
-        if (current === '') return;
         if (previous !== '') {
             let value = compute();
             setPrevious(value);
         } else {
             setPrevious(current);
         }
-        setCurrent('');
         setOperation(el.target.getAttribute('data'));
+        setCurrent('0');
     }
 
     const equals = () => {
@@ -69,7 +70,7 @@ export default function Calculator() {
                 return;
         }
 
-        return result;
+        return String(result);
     }
 
     return (
